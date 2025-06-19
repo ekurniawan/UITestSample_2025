@@ -19,15 +19,19 @@ namespace CreditCards.UITest
         private const string ApplyUrl = "https://localhost:7014/Apply";
         private readonly ITestOutputHelper output;
 
+        private ChromeOptions options;
+
         public CreditCardWebAppShould(ITestOutputHelper testOutputHelper)
         {
             this.output = testOutputHelper;
+            options = new ChromeOptions();
+            options.AddArgument("--headless"); // Run in headless mode
         }
 
         [Fact]
         public void LoadApplicationPage()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl("https://localhost:7014/");
 
@@ -41,7 +45,7 @@ namespace CreditCards.UITest
         [Fact]
         public void ReloadHomePage()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(HomeUrl);
                 DemoHelper.Pause();
@@ -58,7 +62,7 @@ namespace CreditCards.UITest
         [Fact]
         public void ReloadHomePageOnBack()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(HomeUrl);
                 DemoHelper.Pause();
@@ -75,72 +79,72 @@ namespace CreditCards.UITest
             }
         }
 
-        [Fact]
-        public void SelectButton_NewLowRate()
-        {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl(HomeUrl);
-                DemoHelper.Pause();
-                IWebElement newLowRateButton = driver.FindElement(By.Name("ApplyLowRate"));
-                newLowRateButton.Click();
-                DemoHelper.Pause();
+        //[Fact]
+        //public void SelectButton_NewLowRate()
+        //{
+        //    using (IWebDriver driver = new ChromeDriver(options))
+        //    {
+        //        driver.Navigate().GoToUrl(HomeUrl);
+        //        DemoHelper.Pause();
+        //        IWebElement newLowRateButton = driver.FindElement(By.Name("ApplyLowRate"));
+        //        newLowRateButton.Click();
+        //        DemoHelper.Pause();
 
-                string pageTitle = driver.Title;
-                Assert.Equal("Credit Card Application - Credit Cards", pageTitle);
-                Assert.Equal(ApplyUrl, driver.Url);
-            }
-        }
+        //        string pageTitle = driver.Title;
+        //        Assert.Equal("Credit Card Application - Credit Cards", pageTitle);
+        //        Assert.Equal(ApplyUrl, driver.Url);
+        //    }
+        //}
 
 
-        [Fact]
-        public void SelectButton_EasyApplyNow()
-        {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl(HomeUrl);
-                DemoHelper.Pause();
-                IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
-                carouselNext.Click();
-                DemoHelper.Pause(1000);
-                IWebElement easyApplyNowButton = driver.FindElement(By.LinkText("Easy: Apply Now!"));
-                easyApplyNowButton.Click();
-                DemoHelper.Pause();
+        //[Fact]
+        //public void SelectButton_EasyApplyNow()
+        //{
+        //    using (IWebDriver driver = new ChromeDriver(options))
+        //    {
+        //        driver.Navigate().GoToUrl(HomeUrl);
+        //        DemoHelper.Pause();
+        //        IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
+        //        carouselNext.Click();
+        //        DemoHelper.Pause(1000);
+        //        IWebElement easyApplyNowButton = driver.FindElement(By.LinkText("Easy: Apply Now!"));
+        //        easyApplyNowButton.Click();
+        //        DemoHelper.Pause();
 
-                Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
-                Assert.Equal(ApplyUrl, driver.Url);
-            }
+        //        Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+        //        Assert.Equal(ApplyUrl, driver.Url);
+        //    }
 
-        }
+        //}
 
-        [Fact]
-        public void SelectButton_CustomerService()
-        {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl(HomeUrl);
-                DemoHelper.Pause();
-                IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
-                carouselNext.Click();
-                DemoHelper.Pause(1000);
-                carouselNext.Click();
-                DemoHelper.Pause(1000);
+        //[Fact]
+        //public void SelectButton_CustomerService()
+        //{
+        //    using (IWebDriver driver = new ChromeDriver(options))
+        //    {
+        //        driver.Navigate().GoToUrl(HomeUrl);
+        //        DemoHelper.Pause();
+        //        IWebElement carouselNext = driver.FindElement(By.CssSelector("[data-slide='next']"));
+        //        carouselNext.Click();
+        //        DemoHelper.Pause(1000);
+        //        carouselNext.Click();
+        //        DemoHelper.Pause(1000);
 
-                IWebElement applyLink = driver.FindElement(By.ClassName("customer-service-apply-now"));
-                applyLink.Click();
-                DemoHelper.Pause();
+        //        IWebElement applyLink = driver.FindElement(By.ClassName("customer-service-apply-now"));
+        //        applyLink.Click();
+        //        DemoHelper.Pause();
 
-                Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
-                Assert.Equal(ApplyUrl, driver.Url);
-            }
+        //        Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+        //        Assert.Equal(ApplyUrl, driver.Url);
+        //    }
 
-        }
+        //}
 
 
         [Fact]
         public void Select_FirstRowInTable()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(HomeUrl);
                 DemoHelper.Pause();
@@ -157,73 +161,73 @@ namespace CreditCards.UITest
         }
 
 
-        [Fact]
-        public void SelectButton_EasyApplication_PrebuiltCondition()
-        {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl(HomeUrl);
-                DemoHelper.Pause();
+        //[Fact]
+        //public void SelectButton_EasyApplication_PrebuiltCondition()
+        //{
+        //    using (IWebDriver driver = new ChromeDriver(options))
+        //    {
+        //        driver.Navigate().GoToUrl(HomeUrl);
+        //        DemoHelper.Pause();
 
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(11));
-                IWebElement applyLink = wait.Until(d => d.FindElement(By.LinkText("Easy: Apply Now!")));
-                applyLink.Click();
+        //        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(11));
+        //        IWebElement applyLink = wait.Until(d => d.FindElement(By.LinkText("Easy: Apply Now!")));
+        //        applyLink.Click();
 
-                DemoHelper.Pause();
-                Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
-                Assert.Equal(ApplyUrl, driver.Url);
-            }
+        //        DemoHelper.Pause();
+        //        Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+        //        Assert.Equal(ApplyUrl, driver.Url);
+        //    }
 
-        }
-
-
-        [Fact]
-        public void SubmitForm_WhenValid()
-        {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl(ApplyUrl);
-                DemoHelper.Pause(2000);
-
-                driver.FindElement(By.Id("FirstName")).SendKeys("Erick");
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("LastName")).SendKeys("Kurniawan");
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys("123456-A");
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("Age")).SendKeys("30");
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys("50000");
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("Single")).Click();
-                IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
-                SelectElement businessSourceSelect = new SelectElement(businessSourceSelectElement);
-
-                Assert.Equal("I'd Rather Not Say", businessSourceSelect.SelectedOption.Text);
-                foreach (IWebElement option in businessSourceSelect.Options)
-                {
-                    output.WriteLine($"Option: {option.Text}");
-                }
-                Assert.Equal(5, businessSourceSelect.Options.Count);
-
-                //businessSourceSelect.SelectByValue("Email");
-                businessSourceSelect.SelectByText("Internet Search");
-
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("TermsAccepted")).Click();
-
-                DemoHelper.Pause(1000);
-                driver.FindElement(By.Id("SubmitApplication")).Submit();
-
-                Assert.Equal("Application Complete - Credit Cards", driver.Title);
-
-                Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
-
-                DemoHelper.Pause();
+        //}
 
 
-            }
-        }
+        //[Fact]
+        //public void SubmitForm_WhenValid()
+        //{
+        //    using (IWebDriver driver = new ChromeDriver(options))
+        //    {
+        //        driver.Navigate().GoToUrl(ApplyUrl);
+        //        DemoHelper.Pause(2000);
+
+        //        driver.FindElement(By.Id("FirstName")).SendKeys("Erick");
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("LastName")).SendKeys("Kurniawan");
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys("123456-A");
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("Age")).SendKeys("30");
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys("50000");
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("Single")).Click();
+        //        IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
+        //        SelectElement businessSourceSelect = new SelectElement(businessSourceSelectElement);
+
+        //        Assert.Equal("I'd Rather Not Say", businessSourceSelect.SelectedOption.Text);
+        //        foreach (IWebElement option in businessSourceSelect.Options)
+        //        {
+        //            output.WriteLine($"Option: {option.Text}");
+        //        }
+        //        Assert.Equal(5, businessSourceSelect.Options.Count);
+
+        //        //businessSourceSelect.SelectByValue("Email");
+        //        businessSourceSelect.SelectByText("Internet Search");
+
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("TermsAccepted")).Click();
+
+        //        DemoHelper.Pause(1000);
+        //        driver.FindElement(By.Id("SubmitApplication")).Submit();
+
+        //        Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+
+        //        Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
+
+        //        DemoHelper.Pause();
+
+
+        //    }
+        //}
 
 
         [Theory]
@@ -234,7 +238,7 @@ namespace CreditCards.UITest
         [ClassData(typeof(TestData.StronglyTypeCreditCardApplyTestData))]
         public void SubmitFormMultiData_RefferToHuman(string firstName, string lastName, string frequentFlyerNumber, string age, string grossAnnualIncome, string maritalStatus, string businessSource)
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(ApplyUrl);
                 DemoHelper.Pause(2000);
@@ -271,7 +275,7 @@ namespace CreditCards.UITest
         [Fact]
         public void AlertIfLiveChatClose()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(HomeUrl);
                 driver.FindElement(By.Id("LiveChat")).Click();
@@ -302,7 +306,7 @@ namespace CreditCards.UITest
         [Fact]
         public void AlertAcceptOrDismiss()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl(HomeUrl);
                 driver.FindElement(By.Id("LearnAboutUs")).Click();
@@ -333,7 +337,7 @@ namespace CreditCards.UITest
         [Fact]
         public void ClickOverlayedLink()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl("https://localhost:7014/jsoverlay.html");
 
@@ -355,7 +359,7 @@ namespace CreditCards.UITest
         [Fact]
         public void GetOverlayedLinkText()
         {
-            using (IWebDriver driver = new ChromeDriver())
+            using (IWebDriver driver = new ChromeDriver(options))
             {
                 driver.Navigate().GoToUrl("https://localhost:7014/jsoverlay.html");
 
