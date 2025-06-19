@@ -1,10 +1,12 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace CreditCards.UITest
 {
@@ -15,6 +17,12 @@ namespace CreditCards.UITest
         private const string HomePageTitle = "Home Page - Credit Cards";
         private const string AboutUrl = "https://localhost:7014/Home/About";
         private const string ApplyUrl = "https://localhost:7014/Apply";
+        private readonly ITestOutputHelper output;
+
+        public CreditCardWebAppShould(ITestOutputHelper testOutputHelper)
+        {
+            this.output = testOutputHelper;
+        }
 
         [Fact]
         public void LoadApplicationPage()
@@ -128,5 +136,139 @@ namespace CreditCards.UITest
 
         }
 
+
+        [Fact]
+        public void Select_FirstRowInTable()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+                DemoHelper.Pause();
+
+                //IWebElement firstTableCell = driver.FindElement(By.CssSelector("table tbody tr:first-child td:first-child"));
+                //IWebElement firstTableCell = driver.FindElement(By.TagName("td"));
+                IWebElement firstTableCell = driver.FindElement(By.XPath("//table/tbody/tr[1]/td[1]"));
+
+
+                string firstRowText = firstTableCell.Text;
+                Assert.Equal("Easy Credit Card", firstRowText);
+            }
+
+        }
+
+
+        [Fact]
+        public void SelectButton_EasyApplication_PrebuiltCondition()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+                DemoHelper.Pause();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(11));
+                IWebElement applyLink = wait.Until(d => d.FindElement(By.LinkText("Easy: Apply Now!")));
+                applyLink.Click();
+
+                DemoHelper.Pause();
+                Assert.Equal("Credit Card Application - Credit Cards", driver.Title);
+                Assert.Equal(ApplyUrl, driver.Url);
+            }
+
+        }
+
+
+        [Fact]
+        public void SubmitForm_WhenValid()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(ApplyUrl);
+                DemoHelper.Pause(2000);
+
+                driver.FindElement(By.Id("FirstName")).SendKeys("Erick");
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("LastName")).SendKeys("Kurniawan");
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys("123456-A");
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("Age")).SendKeys("30");
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys("50000");
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("Single")).Click();
+                IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
+                SelectElement businessSourceSelect = new SelectElement(businessSourceSelectElement);
+
+                Assert.Equal("I'd Rather Not Say", businessSourceSelect.SelectedOption.Text);
+                foreach (IWebElement option in businessSourceSelect.Options)
+                {
+                    output.WriteLine($"Option: {option.Text}");
+                }
+                Assert.Equal(5, businessSourceSelect.Options.Count);
+
+                //businessSourceSelect.SelectByValue("Email");
+                businessSourceSelect.SelectByText("Internet Search");
+
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("TermsAccepted")).Click();
+
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("SubmitApplication")).Submit();
+
+                Assert.Equal("Application Complete - Credit Cards", driver.Title);
+
+                Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
+
+                DemoHelper.Pause();
+
+
+            }
+        }
+
+
+        [Theory]
+        [InlineData("Erick", "Kurniawan", "123456-A", "30", "50000", "Single", "Declined To Comment")]
+        [InlineData("John", "Doe", "654321-B", "28", "50000", "Married", "Email")]
+        [InlineData("Jane", "Smith", "789012-C", "35", "70000", "Single", "Internet")]
+        [InlineData("Alice", "Johnson", "345678-D", "40", "80000", "Married", "Word of Mouth")]
+        public void SubmitFormMultiData_RefferToHuman(string firstName, string lastName, string frequentFlyerNumber, string age, string grossAnnualIncome, string maritalStatus, string businessSource)
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(ApplyUrl);
+                DemoHelper.Pause(2000);
+
+                driver.FindElement(By.Id("FirstName")).SendKeys(firstName);
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("LastName")).SendKeys(lastName);
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("FrequentFlyerNumber")).SendKeys(frequentFlyerNumber);
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("Age")).SendKeys(age);
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("GrossAnnualIncome")).SendKeys(grossAnnualIncome);
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id(maritalStatus)).Click();
+                IWebElement businessSourceSelectElement = driver.FindElement(By.Id("BusinessSource"));
+                SelectElement businessSourceSelect = new SelectElement(businessSourceSelectElement);
+
+                businessSourceSelect.SelectByValue(businessSource);
+                //businessSourceSelect.SelectByText(businessSource);
+
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("TermsAccepted")).Click();
+
+                DemoHelper.Pause(1000);
+                driver.FindElement(By.Id("SubmitApplication")).Submit();
+
+                DemoHelper.Pause(2000);
+
+                Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
+
+            }
+        }
+
+
     }
 }
+
