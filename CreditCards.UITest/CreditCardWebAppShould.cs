@@ -268,6 +268,70 @@ namespace CreditCards.UITest
             }
         }
 
+        [Fact]
+        public void AlertIfLiveChatClose()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+                driver.FindElement(By.Id("LiveChat")).Click();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                // Replace the deprecated ExpectedConditions usage with a custom wait for alert
+                IAlert alert = wait.Until(driver =>
+                {
+                    try
+                    {
+                        return driver.SwitchTo().Alert();
+                    }
+                    catch (NoAlertPresentException)
+                    {
+                        return null;
+                    }
+                });
+                Assert.Equal("Live chat is currently closed.", alert.Text);
+
+                DemoHelper.Pause();
+
+                alert.Accept(); // Accept the alert to close it
+                DemoHelper.Pause();
+            }
+        }
+
+
+        [Fact]
+        public void AlertAcceptOrDismiss()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl(HomeUrl);
+                driver.FindElement(By.Id("LearnAboutUs")).Click();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                // Replace the deprecated ExpectedConditions usage with a custom wait for alert
+                IAlert alert = wait.Until(driver =>
+                {
+                    try
+                    {
+                        return driver.SwitchTo().Alert();
+                    }
+                    catch (NoAlertPresentException)
+                    {
+                        return null;
+                    }
+                });
+                Assert.Equal("Do you want to learn more about us?", alert.Text);
+
+                DemoHelper.Pause();
+
+                alert.Dismiss();
+                //alert.Accept(); // Accept the alert to close it
+                DemoHelper.Pause();
+            }
+        }
+
+
+
 
     }
 }
