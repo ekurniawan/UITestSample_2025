@@ -374,7 +374,8 @@ namespace CreditCards.UITest
             }
         }
 
-
+        //dotnet test --logger "trx;LogFileName=test_results.trx"
+        //dotnet test –logger "html;logfilename=testResults.html"
 
 
     }
