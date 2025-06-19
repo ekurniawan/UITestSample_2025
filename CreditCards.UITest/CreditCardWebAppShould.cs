@@ -330,6 +330,46 @@ namespace CreditCards.UITest
             }
         }
 
+        [Fact]
+        public void ClickOverlayedLink()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl("https://localhost:7014/jsoverlay.html");
+
+                DemoHelper.Pause();
+
+                string script = "document.getElementById('HiddenLink').click();";
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                js.ExecuteScript(script);
+
+                //driver.FindElement(By.Id("HiddenLink")).Click();
+
+                DemoHelper.Pause();
+
+                Assert.Equal("https://www.selenium.dev/", driver.Url);
+            }
+        }
+
+
+        [Fact]
+        public void GetOverlayedLinkText()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl("https://localhost:7014/jsoverlay.html");
+
+                DemoHelper.Pause();
+
+                string script = "return document.getElementById('HiddenLink').innerHTML;";
+
+                IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
+                string linkText = (string)js.ExecuteScript(script);
+
+                Assert.Equal("Go to Selenium Web Page", linkText);
+            }
+        }
+
 
 
 
