@@ -227,10 +227,11 @@ namespace CreditCards.UITest
 
 
         [Theory]
-        [InlineData("Erick", "Kurniawan", "123456-A", "30", "50000", "Single", "Declined To Comment")]
-        [InlineData("John", "Doe", "654321-B", "28", "50000", "Married", "Email")]
-        [InlineData("Jane", "Smith", "789012-C", "35", "70000", "Single", "Internet")]
-        [InlineData("Alice", "Johnson", "345678-D", "40", "80000", "Married", "Word of Mouth")]
+        //[InlineData("Erick", "Kurniawan", "123456-A", "30", "50000", "Single", "Declined To Comment")]
+        //[InlineData("John", "Doe", "654321-B", "28", "50000", "Married", "Email")]
+        //[InlineData("Jane", "Smith", "789012-C", "35", "70000", "Single", "Internet")]
+        //[InlineData("Alice", "Johnson", "345678-D", "40", "80000", "Married", "Word of Mouth")]
+        [ClassData(typeof(TestData.StronglyTypeCreditCardApplyTestData))]
         public void SubmitFormMultiData_RefferToHuman(string firstName, string lastName, string frequentFlyerNumber, string age, string grossAnnualIncome, string maritalStatus, string businessSource)
         {
             using (IWebDriver driver = new ChromeDriver())
@@ -264,7 +265,6 @@ namespace CreditCards.UITest
                 DemoHelper.Pause(2000);
 
                 Assert.Equal("ReferredToHuman", driver.FindElement(By.Id("Decision")).Text);
-
             }
         }
 
