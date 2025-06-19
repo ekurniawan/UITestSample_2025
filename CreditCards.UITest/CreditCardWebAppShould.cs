@@ -18,6 +18,11 @@ namespace CreditCards.UITest
             {
                 driver.Navigate().GoToUrl("https://localhost:7014/");
 
+                DemoHelper.Pause();
+
+                string pageTitle = driver.Title;
+
+                Assert.Equal("Home Page - Credit Cards", pageTitle);
             }
         }
 
